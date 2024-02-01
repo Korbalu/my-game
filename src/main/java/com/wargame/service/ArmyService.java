@@ -30,11 +30,25 @@ public class ArmyService {
 
     public void saveArmy(ArmyCreationDTO creationDTO) {
         Army army = new Army(creationDTO);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
-        army.setOwner(owner);
-        armyRepository.save(army);
+
+        Army army2;
+        if (owner != null) {
+            army2 = armyRepository.findByOwnerAndType(owner.getId(), creationDTO.getType());
+        } else {
+            army2 = null;
+        }
+        if (army2 != null) {
+            army2.setQuantity(army2.getQuantity() + creationDTO.getQuantity());
+            armyRepository.save(army2);
+        } else {
+            army.setOwner(owner);
+            armyRepository.save(army);
+        }
+
     }
 
     public void updateArmy(Long id, ArmyUpdateDTO armyDTO) {

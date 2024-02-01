@@ -1,6 +1,7 @@
 package com.wargame.repository;
 
 import com.wargame.domain.Army;
+import com.wargame.domain.Units;
 import com.wargame.dto.outgoing.ArmyListDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,9 @@ public interface ArmyRepository extends JpaRepository<Army, Long> {
 
     @Query("select a from Army a order by a.owner")
     List<Army> findAllOrderedbyOwner();
+
+    @Query("select a from Army a where a.owner.id =:id and a.type =:id2")
+    Army findByOwnerAndType(@Param("id") Long id, @Param("id2") Units id2);
 
     @Query("select a from Army a where a.owner =:id order by a.type")
     List<Army> findAllById(@Param("id") Long id);
