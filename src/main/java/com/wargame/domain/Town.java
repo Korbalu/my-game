@@ -17,16 +17,21 @@ public class Town {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "townId")
     private Long id;
-    @Column(name = "ownerId")
-    private Long owner;
+    @Column(name = "townName")
+    private String name;
     @Column
     private Long vault;
     @Column
     private List<Buildings> buildings;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "raceType")
+    private Race race;
+    @ManyToOne
+    private CustomUser owner;
 
     public Town(TownCreationDTO TCDTO) {
-        this.owner = TCDTO.getOwner();
-        this.vault = TCDTO.getVault();
+        this.name = TCDTO.getName();
+        this.vault = 2000L;
         this.buildings = new ArrayList<>();
     }
 }

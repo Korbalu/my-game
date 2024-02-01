@@ -22,7 +22,6 @@ export class UserService {
   logout():Observable<any>{
     // @ts-ignore
     this.token = localStorage.getItem("token");
-    console.log("Token:", this.token);
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     return this.http.post(BASE_URL + "/api/auth/logout", {headers});

@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TownCreationDTO {
-    private Long owner;
-    private Long vault;
+    private String race;
+    private String name;
 }

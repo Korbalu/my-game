@@ -33,7 +33,9 @@ public class CustomUser implements UserDetails {
     private LocalDateTime createdAt;
     @OneToMany(mappedBy = "owner")
     private List<Army> armies;
-    @Column (name="token")
+    @OneToMany(mappedBy = "owner")
+    private List<Town> towns;
+    @Column
     private String token;
 
     public CustomUser(Long id, String name, String email, String password, UserRole role, LocalDateTime createdAt) {
