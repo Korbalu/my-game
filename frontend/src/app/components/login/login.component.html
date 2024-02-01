@@ -1,0 +1,14 @@
+<div *ngIf="localStorage.getItem('token') ==='' || localStorage.getItem('token') === null " class="loginner">
+  <div>
+    <input type="text" #name class="name">
+  </div>
+  <div>
+    <input type="password" #passe class="pass">
+  </div>
+  <div>
+    <button (click)="tosubmit(name.value, passe.value)">submit</button>
+  </div>
+</div>
+<div *ngIf="localStorage.getItem('token')" class="logouter">
+  <button (click)="logout()">Logout</button>
+</div>

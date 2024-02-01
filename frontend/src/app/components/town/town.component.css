@@ -1,0 +1,25 @@
+.towner {
+  border-style: solid;
+  border-color: black;
+  border-spacing: 3px;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 20px;
+  text-align: center;
+
+}
+.detailer{
+  display: flex;
+  align-items: center;
+  flex: auto;
+  justify-content: center;
+  text-align: center;
+}
+
+.armyLister, .buildingLister {
+  flex-direction: column;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  flex: fit-content;
+}
