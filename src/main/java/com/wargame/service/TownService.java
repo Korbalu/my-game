@@ -57,8 +57,8 @@ public class TownService {
 
     public BuildingListDTO listBuildings(Long id) {
         Town town = townRepository.findById(id).orElse(null);
+
         BuildingListDTO blTDO = new BuildingListDTO();
-        blTDO.setId(town.getId());
         blTDO.setBuildings(new HashMap<>());
         for (Buildings townBuilding : town.getBuildings()) {
             if (!blTDO.getBuildings().containsKey(townBuilding.getDisplayName())) {

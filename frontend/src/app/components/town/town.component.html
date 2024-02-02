@@ -1,17 +1,17 @@
-
 <div class="towner">
-  <h3>{{armyList[0].owner}}</h3>
+  <h3>{{owner}}</h3>
   <div class="detailer">
-
-  <div class="buildingLister">
-    Just4Test
-  </div>
-      <div class="armyLister">
-  <div  *ngFor="let army of armyList">
-    {{army.id}}. {{army.type}}: {{army.quantity}} ({{army.race}})
-    <br>
-  </div>
+    <div class="buildingLister">
+      <div *ngFor="let key of Object.entries(buildingList)">
+        {{ key }}
+      </div>
+    </div>
+    <div class="armyLister">
+      <div *ngFor="let army of armyList">
+        {{army.id}}. {{army.type}}: {{army.quantity}} ({{army.race}})
+        <br>
+      </div>
     </div>
 
-</div>
+  </div>
 </div>

@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {AuthenticationRequestModel} from "../models/authentication-request-model";
 import {ArmyListModel} from "../models/army-list-model";
 import {TokenModel} from "../models/token-model";
+import {BuildingListModel} from "../models/building-list-model";
 
 const BASE_URL: string = "http://localhost:8080";
 
@@ -36,5 +37,12 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     return this.http.get<Array<ArmyListModel>>(BASE_URL + "/api/army", {headers})
+  }
+  buildingAsker(townId: number):Observable<Array<BuildingListModel>>{
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+
+    return this.http.get<Array<BuildingListModel>>(BASE_URL + "/api/town/building/" + townId, {headers})
   }
 }
