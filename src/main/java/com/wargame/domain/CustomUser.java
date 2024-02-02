@@ -38,14 +38,6 @@ public class CustomUser implements UserDetails {
     @Column
     private String token;
 
-    public CustomUser(Long id, String name, String email, String password, UserRole role, LocalDateTime createdAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.createdAt = createdAt;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
