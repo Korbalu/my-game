@@ -2,7 +2,9 @@
   <h3>{{owner}}</h3>
   <div class="detailer">
     <div class="buildingLister">
-
+      <div *ngFor="let building of buildingList">
+        {{building.building}} : {{building.quantity}}
+      </div>
     </div>
     <div class="armyLister">
       <div *ngFor="let army of armyList">

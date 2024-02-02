@@ -3,6 +3,7 @@ package com.wargame.controller;
 import com.wargame.domain.Buildings;
 import com.wargame.dto.incoming.BuildingCreationDTO;
 import com.wargame.dto.incoming.TownCreationDTO;
+import com.wargame.dto.outgoing.AltBuildingListDTO;
 import com.wargame.dto.outgoing.BuildingListDTO;
 import com.wargame.service.TownService;
 import org.springframework.data.repository.query.Param;
@@ -38,5 +39,10 @@ public class TownController {
     @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<BuildingListDTO> listBuildings(@PathVariable Long id){
         return new ResponseEntity<>(townService.listBuildings(id), HttpStatus.OK);
+    }
+    @GetMapping("/building2/{id}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<AltBuildingListDTO>> listBuildingsAlternative(@PathVariable Long id){
+        return new ResponseEntity<>(townService.listBuildingsAlternative(id), HttpStatus.OK);
     }
 }

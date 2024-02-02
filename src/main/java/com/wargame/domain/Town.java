@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "town")
@@ -21,8 +23,8 @@ public class Town {
     private String name;
     @Column
     private Long vault;
-    @Column
-    private List<Buildings> buildings;
+    @ElementCollection
+    private Map<Buildings, Long> buildings;
     @Enumerated(EnumType.STRING)
     @Column(name = "raceType")
     private Race race;
@@ -32,6 +34,6 @@ public class Town {
     public Town(TownCreationDTO TCDTO) {
         this.name = TCDTO.getName();
         this.vault = 2000L;
-        this.buildings = new ArrayList<>();
+        this.buildings = new HashMap<>();
     }
 }
