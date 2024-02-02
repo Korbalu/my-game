@@ -50,5 +50,4 @@ export class TownComponent implements OnInit {
     });
   }
 
-  protected readonly Object = Object;
 }
