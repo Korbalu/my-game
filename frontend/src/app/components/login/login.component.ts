@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticationRequestModel} from "../../models/authentication-request-model";
 import {UserService} from "../../services/user.service";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,14 @@ import {UserService} from "../../services/user.service";
 })
 export class LoginComponent {
   datas: AuthenticationRequestModel = {email: '', password: ''};
+  regForm!: FormGroup;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, private userService: UserService, private formBuilder: FormBuilder) {
+    this.regForm = this.formBuilder.group({
+      'name': [''],
+      'email': [''],
+      'password': ['']
+    })
   }
 
   tosubmit(name: string, pass: string) {
@@ -31,6 +38,21 @@ export class LoginComponent {
     });
   }
 
+  toReg() {
+    this.userService.register(this.regForm.value).subscribe({
+      next: (response) => {
+        console.log(response);
+        localStorage.setItem('token', response.token);
+      },
+      error: err => {
+        console.log(err)
+      },
+      complete: () => {
+        this.router.navigate(["create-town"])
+      }
+    })
+  }
+
   logout() {
     this.userService.logout().subscribe({
       next: () => {
@@ -44,6 +66,7 @@ export class LoginComponent {
       }
     })
   }
+
   protected readonly localStorage = localStorage;
 
 }

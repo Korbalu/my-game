@@ -1,11 +1,13 @@
 package com.wargame.service;
 
+import com.wargame.domain.Race;
 import com.wargame.dto.incoming.AuthenticationRequest;
 import com.wargame.dto.incoming.AuthenticationResponse;
 import com.wargame.config.JWTProcessor;
 import com.wargame.dto.incoming.RegisterRequestDTO;
 import com.wargame.domain.CustomUser;
 import com.wargame.domain.UserRole;
+import com.wargame.dto.outgoing.RaceListDTO;
 import com.wargame.repository.CustomUserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService {
@@ -39,9 +44,13 @@ public class AuthenticationService {
         cUser.setPassword(passwordEncoder.encode(request.getPassword()));
         cUser.setRole(UserRole.USER);
         cUser.setCreatedAt(LocalDateTime.now());
-        customUserRepository.save(cUser);
-        String jwt = processor.generateToken(cUser);
-        return AuthenticationResponse.builder().token(jwt).build();
+        if (customUserRepository.findAllByEmail(cUser.getEmail()).orElse(null) == null){
+            customUserRepository.save(cUser);
+            String jwt = processor.generateToken(cUser);
+            return AuthenticationResponse.builder().token(jwt).build();
+        } else {
+            return null;
+        }
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -55,5 +64,18 @@ public class AuthenticationService {
         String jwt = processor.generateToken(cUser);
         cUser.setToken(jwt);
         return AuthenticationResponse.builder().token(jwt).build();
+    }
+
+    public List<RaceListDTO> raceLister() {
+        return Arrays.stream(Race.values())
+                .map(race -> {
+                    RaceListDTO dto = new RaceListDTO();
+                    dto.setRaceName(race.getDisplayName());
+                    return dto;})
+                .collect(Collectors.toList());
+
+//        return Arrays.stream(Race.values())
+//                .map(race -> new RaceListDTO())
+//                .collect(Collectors.toList());
     }
 }

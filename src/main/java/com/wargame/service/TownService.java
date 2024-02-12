@@ -8,6 +8,8 @@ import com.wargame.dto.incoming.BuildingCreationDTO;
 import com.wargame.dto.incoming.TownCreationDTO;
 import com.wargame.dto.outgoing.AltBuildingListDTO;
 import com.wargame.dto.outgoing.BuildingListDTO;
+import com.wargame.dto.outgoing.LoggedInUserIdDTO;
+import com.wargame.dto.outgoing.TownIdDTO;
 import com.wargame.repository.CustomUserRepository;
 import com.wargame.repository.TownRepository;
 import jakarta.transaction.Transactional;
@@ -34,6 +36,7 @@ public class TownService {
 
     public void townCreator(TownCreationDTO tcDTO) {
         Town town = new Town(tcDTO);
+
         Race race = switch (tcDTO.getRace()) {
             case "Human" -> Race.Human;
             case "Orc" -> Race.Orc;
@@ -44,7 +47,7 @@ public class TownService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
-        CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+        CustomUser owner = customUserRepository.findByMail(loggedInUser.getUsername()).orElse(null);
         town.setOwner(owner);
 
         townRepository.save(town);
@@ -90,5 +93,24 @@ public class TownService {
     private void addBuilding(Town town, Buildings building) {
         town.getBuildings().computeIfPresent(building, (k, v) -> v + 1);
         town.getBuildings().putIfAbsent(building, 1L);
+    }
+
+    public TownIdDTO townIdentifier() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+        CustomUser owner = customUserRepository.findByMail(loggedInUser.getUsername()).orElse(null);
+        System.out.println("2-----------------------------------------------------------------");
+        System.out.println(owner);
+        System.out.println(owner.getId());
+        System.out.println(owner.getTowns());
+        Town town = townRepository.findByOwner(owner.getId()).orElse(null);
+        return new TownIdDTO(town.getId());
+    }
+
+    public LoggedInUserIdDTO userIdentifier() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+        CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+        return new LoggedInUserIdDTO(owner.getId(), owner.getName());
     }
 }

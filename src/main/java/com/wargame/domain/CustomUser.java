@@ -72,4 +72,8 @@ public class CustomUser implements UserDetails {
     public String getEmail() {
         return email;
     }
+    @Override
+    public String toString() {
+        return "CustomUser{id=" + id + ", name='" + name + "', email='" + email + "'}";
+    }
 }

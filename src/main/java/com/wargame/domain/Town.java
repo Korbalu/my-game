@@ -36,4 +36,8 @@ public class Town {
         this.vault = 2000L;
         this.buildings = new HashMap<>();
     }
+    @Override
+    public String toString() {
+        return "Town{id=" + id + ", name='" + name + "', owner=" + owner.getEmail() + "}";
+    }
 }

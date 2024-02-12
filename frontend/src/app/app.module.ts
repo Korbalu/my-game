@@ -7,19 +7,23 @@ import { LoginComponent } from './components/login/login.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TownComponent } from './components/town/town.component';
 import {HttpClientModule} from "@angular/common/http";
+import {ReactiveFormsModule} from "@angular/forms";
+import { CreateTownComponent } from './components/create-town/create-town.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    TownComponent
+    TownComponent,
+    CreateTownComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        ReactiveFormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
