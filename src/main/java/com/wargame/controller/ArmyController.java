@@ -3,6 +3,7 @@ package com.wargame.controller;
 import com.wargame.dto.incoming.ArmyCreationDTO;
 import com.wargame.dto.outgoing.ArmyListDTO;
 import com.wargame.dto.incoming.ArmyUpdateDTO;
+import com.wargame.dto.outgoing.UnitListDTO;
 import com.wargame.service.ArmyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,12 @@ public class ArmyController {
     public ResponseEntity<String> changeOneArmy(@PathVariable Long id, @RequestBody ArmyUpdateDTO updateDTO) {
         armyService.updateArmy(id, updateDTO);
         return new ResponseEntity<>("Army Updated to " + updateDTO.getQuantity() + "!", HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<UnitListDTO>> unitLister(){
+        return new ResponseEntity<>(armyService.unitLister(), HttpStatus.OK);
     }
 
 }

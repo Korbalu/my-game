@@ -6,6 +6,7 @@ import com.wargame.domain.Units;
 import com.wargame.dto.incoming.ArmyCreationDTO;
 import com.wargame.dto.outgoing.ArmyListDTO;
 import com.wargame.dto.incoming.ArmyUpdateDTO;
+import com.wargame.dto.outgoing.UnitListDTO;
 import com.wargame.repository.ArmyRepository;
 import com.wargame.repository.CustomUserRepository;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +65,19 @@ public class ArmyService {
         Army army = armyRepository.findOneById(id);
         army.setQuantity(armyDTO.getQuantity());
         armyRepository.save(army);
+    }
+
+    public List<UnitListDTO> unitLister() {
+        List<UnitListDTO> units = new ArrayList<>();
+        for (Units value : Units.values()) {
+            UnitListDTO unit = new UnitListDTO();
+            unit.setName(value.getDisplayName());
+            unit.setAttack(value.getAttack());
+            unit.setDefense(value.getDefense());
+            unit.setCost(value.getCost());
+            units.add(unit);
+        }
+        return units;
     }
 
 }

@@ -1,15 +1,9 @@
 package com.wargame.service;
 
-import com.wargame.domain.Buildings;
-import com.wargame.domain.CustomUser;
-import com.wargame.domain.Race;
-import com.wargame.domain.Town;
+import com.wargame.domain.*;
 import com.wargame.dto.incoming.BuildingCreationDTO;
 import com.wargame.dto.incoming.TownCreationDTO;
-import com.wargame.dto.outgoing.AltBuildingListDTO;
-import com.wargame.dto.outgoing.BuildingListDTO;
-import com.wargame.dto.outgoing.LoggedInUserIdDTO;
-import com.wargame.dto.outgoing.TownIdDTO;
+import com.wargame.dto.outgoing.*;
 import com.wargame.repository.CustomUserRepository;
 import com.wargame.repository.TownRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.lang.model.type.UnionType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,10 +94,7 @@ public class TownService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findByMail(loggedInUser.getUsername()).orElse(null);
-        System.out.println("2-----------------------------------------------------------------");
-        System.out.println(owner);
-        System.out.println(owner.getId());
-        System.out.println(owner.getTowns());
+
         Town town = townRepository.findByOwner(owner.getId()).orElse(null);
         return new TownIdDTO(town.getId());
     }
@@ -113,4 +105,5 @@ public class TownService {
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
         return new LoggedInUserIdDTO(owner.getId(), owner.getName());
     }
+
 }

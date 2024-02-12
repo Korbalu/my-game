@@ -27,38 +27,40 @@ public class TownController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<Void> townCreator(@RequestBody TownCreationDTO townCreationDTO){
-        System.out.println("1-----------------------------------------------------------------");
-
+    public ResponseEntity<Void> townCreator(@RequestBody TownCreationDTO townCreationDTO) {
         townService.townCreator(townCreationDTO);
-        System.out.println("2-----------------------------------------------------------------");
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @PostMapping("/building")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<Void> buildingAdder(@RequestBody BuildingCreationDTO buildingCreationDTO){
+    public ResponseEntity<Void> buildingAdder(@RequestBody BuildingCreationDTO buildingCreationDTO) {
         townService.buildingAdder(buildingCreationDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @GetMapping("/building/{id}")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<BuildingListDTO> listBuildings(@PathVariable Long id){
+    public ResponseEntity<BuildingListDTO> listBuildings(@PathVariable Long id) {
         return new ResponseEntity<>(townService.listBuildings(id), HttpStatus.OK);
     }
+
     @GetMapping("/building2/{id}")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<List<AltBuildingListDTO>> listBuildingsAlternative(@PathVariable Long id){
+    public ResponseEntity<List<AltBuildingListDTO>> listBuildingsAlternative(@PathVariable Long id) {
         return new ResponseEntity<>(townService.listBuildingsAlternative(id), HttpStatus.OK);
     }
+
     @GetMapping("/townid")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<TownIdDTO> townIdentifier(){
+    public ResponseEntity<TownIdDTO> townIdentifier() {
         return new ResponseEntity<>(townService.townIdentifier(), HttpStatus.OK);
     }
+
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<LoggedInUserIdDTO> userIdentity(){
+    public ResponseEntity<LoggedInUserIdDTO> userIdentity() {
         return new ResponseEntity<>(townService.userIdentifier(), HttpStatus.OK);
     }
+
 }

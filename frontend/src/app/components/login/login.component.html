@@ -1,37 +1,39 @@
 <div *ngIf="localStorage.getItem('token') ==='' || localStorage.getItem('token') === null " class="loginner">
   <div>Login</div>
-  <div>
-    <input type="text" #name class="name">
-  </div>
-  <div>
-    <input type="password" #passe class="pass">
-  </div>
-  <div>
-    <button (click)="tosubmit(name.value, passe.value)">submit</button>
+  <div (keydown.enter)="tosubmit(name.value, passe.value)">
+    <div>
+      <input type="text" #name class="name">
+    </div>
+    <div>
+      <input type="password" #passe class="pass">
+    </div>
+    <div>
+      <button (click)="tosubmit(name.value, passe.value)">submit</button>
+    </div>
   </div>
   <br>
   <div>Register</div>
-  <div>
-<form [formGroup]="regForm">
-  <label class="form-label" for="name">Name</label>
-  <input type="text" class="form-control"
-         formControlName="name"
-         id="name"
-         name="name"
-         placeholder="Enter Name"/>
-  <label class="form-label" for="email">Email address</label>
-  <input type="email" class="form-control"
-         formControlName="email"
-         id="email"
-         name="email"
-         placeholder="Enter Email"/>
-  <label class="form-label" for="password">Password</label>
-  <input type="password" class="form-control"
-         formControlName="password"
-         id="password"
-         name="password"
-         placeholder="Enter password"/>
-</form>
+  <div (keydown.enter)="toReg()">
+    <form [formGroup]="regForm">
+      <label class="form-label" for="name">Name</label>
+      <input type="text" class="form-control"
+             formControlName="name"
+             id="name"
+             name="name"
+             placeholder="Enter Name"/>
+      <label class="form-label" for="email">Email address</label>
+      <input type="email" class="form-control"
+             formControlName="email"
+             id="email"
+             name="email"
+             placeholder="Enter Email"/>
+      <label class="form-label" for="password">Password</label>
+      <input type="password" class="form-control"
+             formControlName="password"
+             id="password"
+             name="password"
+             placeholder="Enter password"/>
+    </form>
     <button (click)="toReg()">Register</button>
   </div>
 </div>

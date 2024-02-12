@@ -12,6 +12,7 @@ import {CreateTownComponent} from "../components/create-town/create-town.compone
 import {TownCreationModel} from "../models/town-creation-model";
 import {TownIdModel} from "../models/town-id-model";
 import {LoggedInUserIdModel} from "../models/logged-in-user-id-model";
+import {UnitListModel} from "../models/unit-list-model";
 
 const BASE_URL: string = "http://localhost:8080";
 
@@ -28,39 +29,45 @@ export class UserService {
     return this.http.post(BASE_URL + "/api/auth/auth", auth);
   }
 
-  register(reg: RegisterRequestModel):Observable<any>{
-  return this.http.post(BASE_URL + "/api/auth/reg", reg)
+  register(reg: RegisterRequestModel): Observable<any> {
+    return this.http.post(BASE_URL + "/api/auth/reg", reg)
   }
-  raceLister():Observable<Array<RaceNameModel>>{
+
+  raceLister(): Observable<Array<RaceNameModel>> {
     // // @ts-ignore
     // this.token = localStorage.getItem("token");
     // const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get<Array<RaceNameModel>>(BASE_URL + "/api/auth/races")
   }
-  townCreator(town: TownCreationModel):Observable<any>{
+
+  townCreator(town: TownCreationModel): Observable<any> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.post(BASE_URL + "/api/town", town, {headers})
   }
-  townIdentity():Observable<any>{
+
+  townIdentity(): Observable<any> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     return this.http.get<TownIdModel>(BASE_URL + "/api/town/townid", {headers})
   }
-  logout():Observable<any>{
+
+  logout(): Observable<any> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     return this.http.post(BASE_URL + "/api/auth/logout", {headers});
   }
-  getToken(token: TokenModel):Observable<any>{
+
+  getToken(token: TokenModel): Observable<any> {
     return this.http.get<TokenModel>(BASE_URL + "/api/auth/token")
   }
-  userAsker():Observable<any>{
+
+  userAsker(): Observable<any> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
@@ -75,18 +82,27 @@ export class UserService {
 
     return this.http.get<Array<ArmyListModel>>(BASE_URL + "/api/army/user/" + userId, {headers})
   }
-  buildingAsker(townId: number):Observable<Array<BuildingListModel>>{
+
+  buildingAsker(townId: number): Observable<Array<BuildingListModel>> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     return this.http.get<Array<BuildingListModel>>(BASE_URL + "/api/town/building/" + townId, {headers})
   }
-  buildingAsker2(townId: number):Observable<Array<AltBuildingListModel>>{
+
+  buildingAsker2(townId: number): Observable<Array<AltBuildingListModel>> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     return this.http.get<Array<AltBuildingListModel>>(BASE_URL + "/api/town/building2/" + townId, {headers})
+  }
+
+  unitLister(): Observable<Array<UnitListModel>> {
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.get<Array<UnitListModel>>(BASE_URL + "/api/army/list", {headers})
   }
 }

@@ -9,6 +9,7 @@ import { TownComponent } from './components/town/town.component';
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import { CreateTownComponent } from './components/create-town/create-town.component';
+import { TrainComponent } from './components/train/train.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CreateTownComponent } from './components/create-town/create-town.compon
     LoginComponent,
     HeaderComponent,
     TownComponent,
-    CreateTownComponent
+    CreateTownComponent,
+    TrainComponent
   ],
     imports: [
         BrowserModule,
