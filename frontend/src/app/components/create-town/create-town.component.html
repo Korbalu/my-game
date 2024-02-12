@@ -1,0 +1,18 @@
+<h2>Please Create your First Town</h2>
+
+<div [formGroup]="townForm">
+  <label class="form-label" for="name">Town Name</label>
+  <input type="text" class="form-control"
+         formControlName="name"
+         id="name"
+         name="name"
+         placeholder="Enter Name"/>
+  <label class="form-label" for="race">Race</label>
+  <select aria-label="race" class="form-control"
+          formControlName="race"
+          id="race">
+  <option disabled>Select race</option>
+  <option *ngFor="let race of races">{{race.raceName}}</option>
+  </select>
+  <button (click)="cont()">Continue</button>
+</div>
