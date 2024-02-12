@@ -105,4 +105,11 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get<Array<UnitListModel>>(BASE_URL + "/api/army/list", {headers})
   }
+
+  unitIncreaser(unit: string): Observable<any> {
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.put(BASE_URL + "/api/army/increase", unit, {headers})
+  }
 }

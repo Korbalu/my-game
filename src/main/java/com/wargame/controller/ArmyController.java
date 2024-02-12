@@ -54,4 +54,10 @@ public class ArmyController {
         return new ResponseEntity<>(armyService.unitLister(), HttpStatus.OK);
     }
 
+    @PutMapping("/increase")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<Void> increaseArmy(@RequestBody String unit){
+        armyService.increaseUnit(unit);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

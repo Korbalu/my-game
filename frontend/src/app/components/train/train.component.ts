@@ -16,14 +16,25 @@ export class TrainComponent {
 
   ngOnInit(): void {
     this.userService.unitLister().subscribe({
-      next:(data) =>{
+      next: (data) => {
         this.units = data;
       },
       error: err => {
         console.log(err)
       },
-      complete:()=>{
+      complete: () => {
+      }
+    })
+  }
 
+  increaser(unit: string) {
+    this.userService.unitIncreaser(unit).subscribe({
+      next: () => {
+      },
+      error: err => {
+        console.log(err)
+      },
+      complete: () => {
       }
     })
   }

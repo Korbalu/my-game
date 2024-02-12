@@ -19,8 +19,12 @@ public interface ArmyRepository extends JpaRepository<Army, Long> {
     @Query("select a from Army a where a.owner.id =:id and a.type =:id2")
     Army findByOwnerAndType(@Param("id") Long id, @Param("id2") Units id2);
 
+    @Query("select a from Army a where a.type =:id")
+    Army findByType(@Param("id") Units id);
+
     @Query("select a from Army a where a.owner.id =:id order by a.type")
     List<Army> findAllById(@Param("id") Long id);
+
     @Query("select a from Army a where a.id =:id")
     Army findOneById(@Param("id") Long id);
 }

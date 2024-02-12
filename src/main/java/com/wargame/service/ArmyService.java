@@ -52,6 +52,26 @@ public class ArmyService {
             armyRepository.save(army);
         }
     }
+    public void increaseUnit(String unit){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+        CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+
+//        Army army = armyRepository.findByType(Units.valueOf(unit));
+
+        Army army = armyRepository.findByOwnerAndType(owner.getId(), Units.valueOf(unit));
+
+        if (army == null){
+            ArmyCreationDTO armyCreationDTO = new ArmyCreationDTO(Units.valueOf(unit), 1L, owner.getTowns().get(0).getRace());
+            Army army2 = new Army(armyCreationDTO);
+            army2.setOwner(owner);
+            owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault()-Units.valueOf(unit).getCost());
+            armyRepository.save(army2);
+        } else {
+            owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault()-Units.valueOf(unit).getCost());
+            army.setQuantity(army.getQuantity()+1);
+        }
+    }
 
     public List<ArmyListDTO> listAllArmies() {
         return armyRepository.findAllOrderedbyOwner().stream().map(ArmyListDTO::new).collect(Collectors.toList());
