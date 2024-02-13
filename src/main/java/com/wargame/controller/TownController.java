@@ -3,10 +3,7 @@ package com.wargame.controller;
 import com.wargame.domain.Buildings;
 import com.wargame.dto.incoming.BuildingCreationDTO;
 import com.wargame.dto.incoming.TownCreationDTO;
-import com.wargame.dto.outgoing.AltBuildingListDTO;
-import com.wargame.dto.outgoing.BuildingListDTO;
-import com.wargame.dto.outgoing.LoggedInUserIdDTO;
-import com.wargame.dto.outgoing.TownIdDTO;
+import com.wargame.dto.outgoing.*;
 import com.wargame.service.TownService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -32,12 +29,12 @@ public class TownController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/building")
-    @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<Void> buildingAdder(@RequestBody BuildingCreationDTO buildingCreationDTO) {
-        townService.buildingAdder(buildingCreationDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping("/building")
+//    @PreAuthorize("hasAnyRole('USER')")
+//    public ResponseEntity<Void> buildingAdder(@RequestBody BuildingCreationDTO buildingCreationDTO) {
+//        townService.buildingAdder(buildingCreationDTO);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     @GetMapping("/building/{id}")
     @PreAuthorize("hasAnyRole('USER')")
@@ -62,5 +59,15 @@ public class TownController {
     public ResponseEntity<LoggedInUserIdDTO> userIdentity() {
         return new ResponseEntity<>(townService.userIdentifier(), HttpStatus.OK);
     }
-
+    @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<BuildingsDTO>> buildingLister(){
+        return new ResponseEntity<>(townService.buildingLister(), HttpStatus.OK);
+    }
+    @PutMapping("/increase")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<Void> increaseBuildings(@RequestBody String building){
+        townService.addBuilding(building);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

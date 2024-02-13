@@ -57,8 +57,6 @@ public class ArmyService {
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
 
-//        Army army = armyRepository.findByType(Units.valueOf(unit));
-
         Army army = armyRepository.findByOwnerAndType(owner.getId(), Units.valueOf(unit));
 
         if (army == null){

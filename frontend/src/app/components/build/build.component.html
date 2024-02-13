@@ -1,0 +1,7 @@
+<div>
+  <div>Buildings</div>
+  <div *ngFor="let building of buildings">
+    {{building.name}}: Production: {{building.production}} Cost: {{building.cost}}
+    <button class="btn btn-success" (click)="increaser(building.name)">+</button>
+  </div>
+</div>

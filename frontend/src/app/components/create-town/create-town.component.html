@@ -10,9 +10,9 @@
   <label class="form-label" for="race">Race</label>
   <select aria-label="race" class="form-control"
           formControlName="race"
-          id="race">
-  <option disabled>Select race</option>
-  <option *ngFor="let race of races">{{race.raceName}}</option>
+          id="race" placeholder="Select Race">
+  <option value="" disabled selected>Select race</option>
+  <option *ngFor="let race of races" [value]="race.raceName">{{race.raceName}}</option>
   </select>
   <button (click)="cont()">Continue</button>
 </div>

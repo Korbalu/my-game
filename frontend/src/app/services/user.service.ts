@@ -13,6 +13,7 @@ import {TownCreationModel} from "../models/town-creation-model";
 import {TownIdModel} from "../models/town-id-model";
 import {LoggedInUserIdModel} from "../models/logged-in-user-id-model";
 import {UnitListModel} from "../models/unit-list-model";
+import {BuildingsModel} from "../models/buildings-model";
 
 const BASE_URL: string = "http://localhost:8080";
 
@@ -105,11 +106,23 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get<Array<UnitListModel>>(BASE_URL + "/api/army/list", {headers})
   }
+  buildingLister(): Observable<Array<BuildingsModel>> {
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.get<Array<BuildingsModel>>(BASE_URL + "/api/town/list", {headers})
+  }
 
   unitIncreaser(unit: string): Observable<any> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.put(BASE_URL + "/api/army/increase", unit, {headers})
+  }
+  buildingIncreaser(building: string): Observable<any> {
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.put(BASE_URL + "/api/town/increase", building, {headers})
   }
 }

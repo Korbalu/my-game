@@ -1,6 +1,7 @@
 package com.wargame.service;
 
 import com.wargame.domain.*;
+import com.wargame.dto.incoming.ArmyCreationDTO;
 import com.wargame.dto.incoming.BuildingCreationDTO;
 import com.wargame.dto.incoming.TownCreationDTO;
 import com.wargame.dto.outgoing.*;
@@ -48,16 +49,16 @@ public class TownService {
         townRepository.save(town);
     }
 
-    public void buildingAdder(BuildingCreationDTO bcDTO) {
-        Town town = townRepository.findById(bcDTO.getTownId()).orElse(null);
-        if (town != null) {
-            switch (bcDTO.getBuilding()) {
-                case "Barracks" -> addBuilding(town, Buildings.Barracks);
-                case "Mine" -> addBuilding(town, Buildings.Mine);
-                case "Wall" -> addBuilding(town, Buildings.Wall);
-            }
-        }
-    }
+//    public void buildingAdder(BuildingCreationDTO bcDTO) {
+//        Town town = townRepository.findById(bcDTO.getTownId()).orElse(null);
+//        if (town != null) {
+//            switch (bcDTO.getBuilding()) {
+//                case "Barracks" -> addBuilding(town, Buildings.Barracks);
+//                case "Mine" -> addBuilding(town, Buildings.Mine);
+//                case "Wall" -> addBuilding(town, Buildings.Wall);
+//            }
+//        }
+//    }
 
     public BuildingListDTO listBuildings(Long id) {
         Town town = townRepository.findById(id).orElse(null);
@@ -85,9 +86,15 @@ public class TownService {
         return list;
     }
 
-    private void addBuilding(Town town, Buildings building) {
-        town.getBuildings().computeIfPresent(building, (k, v) -> v + 1);
-        town.getBuildings().putIfAbsent(building, 1L);
+    public void addBuilding(String building) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+        CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+
+        Town town = townRepository.findByOwnerId(owner.getId());
+        town.getBuildings().computeIfPresent(Buildings.valueOf(building), (k, v) -> v + 1);
+        town.getBuildings().putIfAbsent(Buildings.valueOf(building), 1L);
+        owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault()-Buildings.valueOf(building).getCost());
     }
 
     public TownIdDTO townIdentifier() {
@@ -105,5 +112,15 @@ public class TownService {
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
         return new LoggedInUserIdDTO(owner.getId(), owner.getName());
     }
-
+    public List<BuildingsDTO> buildingLister() {
+        List<BuildingsDTO> buildings = new ArrayList<>();
+        for (Buildings value : Buildings.values()) {
+            BuildingsDTO building = new BuildingsDTO();
+            building.setName(value.getDisplayName());
+            building.setProduction(value.getProduction());
+            building.setCost(value.getCost());
+            buildings.add(building);
+        }
+        return buildings;
+    }
 }
