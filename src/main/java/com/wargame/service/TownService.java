@@ -68,7 +68,6 @@ public class TownService {
         for (Map.Entry<Buildings, Long> entry : town.getBuildings().entrySet()) {
             blTDO.getBuildings().put(entry.getKey().getDisplayName(), entry.getValue());
         }
-
         return blTDO;
     }
 
@@ -80,7 +79,6 @@ public class TownService {
             AltBuildingListDTO abdDTO = new AltBuildingListDTO();
             abdDTO.setBuilding(entry.getKey().getDisplayName());
             abdDTO.setQuantity(entry.getValue());
-
             list.add(abdDTO);
         }
         return list;
@@ -122,5 +120,14 @@ public class TownService {
             buildings.add(building);
         }
         return buildings;
+    }
+
+    public TownDetailsDTO townDetailer(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+        CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+
+        Town town = townRepository.findByOwnerId(owner.getId());
+        return new TownDetailsDTO(town.getVault(), town.getName(), town.getRace().getDisplayName());
     }
 }

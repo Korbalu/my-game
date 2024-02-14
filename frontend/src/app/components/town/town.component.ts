@@ -14,23 +14,38 @@ export class TownComponent implements OnInit {
   armyList: Array<ArmyListModel> = [];
   buildingList: Array<AltBuildingListModel> = [];
   townId!: number;
-  userId!:number;
+  userId!: number;
   owner: string = '';
+  townName: string = '';
+  vault: number = 0;
+  townRace: string = '';
 
   constructor(private userService: UserService) {
 
   }
 
   ngOnInit(): void {
+    this.userService.townDetails().subscribe({
+      next: (data) => {
+        console.log(data)
+        this.vault = data.vault;
+        this.townRace = data.race;
+        this.townName = data.townName;
+      },
+      error: (err)=>{
+        console.log(err)
+      },
+      complete:()=>{}
+    })
     this.userService.userAsker().subscribe({
-      next:(data)=>{
+      next: (data) => {
         this.userId = data.userId;
         this.owner = data.userName;
       },
-      error:err => {
+      error: err => {
         console.log(err)
       },
-      complete:()=>{
+      complete: () => {
         this.userService.armyAsker(this.userId).subscribe({
           next: (data) => {
             this.armyList = data;
@@ -46,14 +61,14 @@ export class TownComponent implements OnInit {
       }
     })
     this.userService.townIdentity().subscribe({
-      next:(data) =>{
+      next: (data) => {
         console.log(data);
         this.townId = data.townId;
       },
       error: err => {
         console.log(err)
       },
-      complete:()=>{
+      complete: () => {
         this.userService.buildingAsker2(this.townId).subscribe({
           next: (data2) => {
             this.buildingList = data2;

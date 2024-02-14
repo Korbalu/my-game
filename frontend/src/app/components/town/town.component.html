@@ -1,5 +1,10 @@
 <div class="towner">
-  <h3>{{owner}}</h3>
+  <h3>{{townName}}</h3>
+  <div class="town-details">
+    <div class="town-details2">{{owner}}</div>
+    <div class="town-details2">{{vault}}</div>
+    <div class="town-details2">{{townRace}}</div>
+  </div>
   <div class="detailer">
     <div class="buildingLister">
       <div *ngFor="let building of buildingList">

@@ -70,4 +70,10 @@ public class TownController {
         townService.addBuilding(building);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/details")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<TownDetailsDTO> townDetailer(){
+        return new ResponseEntity<>(townService.townDetailer(),HttpStatus.OK);
+    }
 }
