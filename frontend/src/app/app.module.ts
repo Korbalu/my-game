@@ -11,6 +11,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { CreateTownComponent } from './components/create-town/create-town.component';
 import { TrainComponent } from './components/train/train.component';
 import { BuildComponent } from './components/build/build.component';
+import { ListOfTownsComponent } from './components/list-of-towns/list-of-towns.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { BuildComponent } from './components/build/build.component';
     TownComponent,
     CreateTownComponent,
     TrainComponent,
-    BuildComponent
+    BuildComponent,
+    ListOfTownsComponent
   ],
     imports: [
         BrowserModule,

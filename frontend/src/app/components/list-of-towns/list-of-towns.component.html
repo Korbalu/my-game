@@ -1,0 +1,18 @@
+<div>
+  <table class="table mb-6">
+    <tbody>
+    <tr class="table-light">
+      <td>ID</td>
+      <td>Town Name</td>
+      <td>Owner Name</td>
+      <td>Race</td>
+    </tr>
+    <tr class="table-bordered" *ngFor="let town of townList">
+      <td>{{town.id}}</td>
+      <td>{{town.name}}</td>
+      <td>{{town.owner}}</td>
+      <td>{{town.race}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

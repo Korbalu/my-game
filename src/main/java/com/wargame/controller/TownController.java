@@ -83,4 +83,10 @@ public class TownController {
         townService.newTurn();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/townList")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<TownListDTO>> townLister(){
+        return new ResponseEntity<>(townService.townLister(), HttpStatus.OK);
+    }
 }

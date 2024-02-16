@@ -7,6 +7,7 @@ import com.wargame.dto.incoming.TownCreationDTO;
 import com.wargame.dto.outgoing.*;
 import com.wargame.repository.CustomUserRepository;
 import com.wargame.repository.TownRepository;
+import io.micrometer.observation.ObservationTextPublisher;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,7 +29,7 @@ public class TownService {
     private ArmyService armyService;
 
 
-    public TownService(TownRepository townRepository, CustomUserRepository customUserRepository,ArmyService armyService) {
+    public TownService(TownRepository townRepository, CustomUserRepository customUserRepository, ArmyService armyService) {
         this.armyService = armyService;
         this.townRepository = townRepository;
         this.customUserRepository = customUserRepository;
@@ -95,7 +97,7 @@ public class TownService {
         Town town = townRepository.findByOwnerId(owner.getId());
         town.getBuildings().computeIfPresent(Buildings.valueOf(building), (k, v) -> v + 1);
         town.getBuildings().putIfAbsent(Buildings.valueOf(building), 1L);
-        owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault()-Buildings.valueOf(building).getCost());
+        owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault() - Buildings.valueOf(building).getCost());
     }
 
     public TownIdDTO townIdentifier() {
@@ -113,6 +115,7 @@ public class TownService {
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
         return new LoggedInUserIdDTO(owner.getId(), owner.getName());
     }
+
     public List<BuildingsDTO> buildingLister() {
         List<BuildingsDTO> buildings = new ArrayList<>();
         for (Buildings value : Buildings.values()) {
@@ -125,7 +128,7 @@ public class TownService {
         return buildings;
     }
 
-    public TownDetailsDTO townDetailer(){
+    public TownDetailsDTO townDetailer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
@@ -133,8 +136,8 @@ public class TownService {
         Town town = townRepository.findByOwnerId(owner.getId());
         return new TownDetailsDTO(town.getVault(), town.getName(), town.getRace().getDisplayName());
     }
-    
-    public void newTurn(){
+
+    public void newTurn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
@@ -143,19 +146,21 @@ public class TownService {
         System.out.println(owner);
 
         for (Map.Entry<Buildings, Long> building : town.getBuildings().entrySet()) {
-            if (building.getKey().equals(Buildings.Mine)){
-                town.setVault(town.getVault() + building.getValue()*Buildings.Mine.getProduction());
+            if (building.getKey().equals(Buildings.Mine)) {
+                town.setVault(town.getVault() + building.getValue() * Buildings.Mine.getProduction());
             }
-            if (building.getKey().equals(Buildings.Barracks)){
+            if (building.getKey().equals(Buildings.Barracks)) {
                 for (int i = 0; i < building.getValue(); i++) {
                     armyService.increaseUnit(Units.Swordsman1.getDisplayName());
                     town.setVault(town.getVault() + Units.Swordsman1.getCost());
                 }
-
             }
             System.out.println(building.getKey());
             System.out.println(building.getValue());
         }
-        
+    }
+
+    public List<TownListDTO> townLister() {
+        return townRepository.findAll().stream().map(TownListDTO::new).collect(Collectors.toList());
     }
 }
