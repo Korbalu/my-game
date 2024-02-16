@@ -135,4 +135,11 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get(BASE_URL + "/api/town/details", {headers})
   }
+
+  newTurn():Observable<any>{
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.get(BASE_URL + "/api/town/newTurn", {headers})
+  }
 }

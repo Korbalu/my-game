@@ -24,8 +24,11 @@ import java.util.List;
 public class TownService {
     private TownRepository townRepository;
     private CustomUserRepository customUserRepository;
+    private ArmyService armyService;
 
-    public TownService(TownRepository townRepository, CustomUserRepository customUserRepository) {
+
+    public TownService(TownRepository townRepository, CustomUserRepository customUserRepository,ArmyService armyService) {
+        this.armyService = armyService;
         this.townRepository = townRepository;
         this.customUserRepository = customUserRepository;
     }
@@ -129,5 +132,30 @@ public class TownService {
 
         Town town = townRepository.findByOwnerId(owner.getId());
         return new TownDetailsDTO(town.getVault(), town.getName(), town.getRace().getDisplayName());
+    }
+    
+    public void newTurn(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+        CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+        Town town = townRepository.findByOwnerId(owner.getId());
+        System.out.println(owner.getId());
+        System.out.println(owner);
+
+        for (Map.Entry<Buildings, Long> building : town.getBuildings().entrySet()) {
+            if (building.getKey().equals(Buildings.Mine)){
+                town.setVault(town.getVault() + building.getValue()*Buildings.Mine.getProduction());
+            }
+            if (building.getKey().equals(Buildings.Barracks)){
+                for (int i = 0; i < building.getValue(); i++) {
+                    armyService.increaseUnit(Units.Swordsman1.getDisplayName());
+                    town.setVault(town.getVault() + Units.Swordsman1.getCost());
+                }
+
+            }
+            System.out.println(building.getKey());
+            System.out.println(building.getValue());
+        }
+        
     }
 }

@@ -87,4 +87,16 @@ export class TownComponent implements OnInit {
 
   }
 
+  newTurner(){
+    this.userService.newTurn().subscribe({
+      next:()=>{},
+      error: err => {
+        console.log(err);
+      },
+      complete:() =>{
+        console.log("A new day has risen!")
+        this.ngOnInit()
+      }
+    })
+  }
 }
