@@ -9,7 +9,7 @@
     </tr>
     <tr class="table-bordered" *ngFor="let town of townList">
       <td>{{town.id}}</td>
-      <td>{{town.name}}</td>
+      <td (click)="battle(town.owner)">{{town.name}}</td>
       <td>{{town.owner}}</td>
       <td>{{town.race}}</td>
     </tr>

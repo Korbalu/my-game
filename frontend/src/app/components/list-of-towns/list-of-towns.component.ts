@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {ArmyListModel} from "../../models/army-list-model";
 import {TownListModel} from "../../models/town-list-model";
@@ -10,20 +10,34 @@ import {TownListModel} from "../../models/town-list-model";
 })
 export class ListOfTownsComponent {
   townList: Array<TownListModel> = [];
+
   constructor(private userService: UserService) {
 
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.userService.townLister().subscribe({
-      next:(data) =>{
+      next: (data) => {
         this.townList = data;
       },
-      error: (err)=>{
+      error: (err) => {
         console.log(err);
       },
-      complete:()=>{
+      complete: () => {
         console.log("Good Job Man!")
+      }
+    })
+  }
+
+  battle(enemy: string) {
+    this.userService.battle(enemy).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.log(err);
+      },
+      complete: () => {
+        console.log("Falalalala BOOM")
       }
     })
   }

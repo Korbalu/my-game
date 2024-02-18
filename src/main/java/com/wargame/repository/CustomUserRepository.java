@@ -16,4 +16,7 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
 
     @Query("select u from CustomUser u where u.email =:email")
     Optional<CustomUser> findByMail(@Param("email") String email);
+
+    @Query("select u from CustomUser u where u.name =:name")
+    Optional<CustomUser> findByName(@Param("name") String name);
 }

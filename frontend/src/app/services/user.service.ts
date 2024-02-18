@@ -137,17 +137,24 @@ export class UserService {
     return this.http.get(BASE_URL + "/api/town/details", {headers})
   }
 
-  newTurn():Observable<any>{
+  newTurn(): Observable<any> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get(BASE_URL + "/api/town/newTurn", {headers})
   }
 
-  townLister():Observable<Array<TownListModel>>{
+  townLister(): Observable<Array<TownListModel>> {
     // @ts-ignore
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get<Array<TownListModel>>(BASE_URL + "/api/town/townList", {headers})
+  }
+
+  battle(enemy: string): Observable<any>{
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.post(BASE_URL + "/api/army/battle", enemy, {headers})
   }
 }

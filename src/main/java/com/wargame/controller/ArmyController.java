@@ -60,4 +60,11 @@ public class ArmyController {
         armyService.increaseUnit(unit);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/battle")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<Void> battle(@RequestBody String enemy){
+        armyService.battle(enemy);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
