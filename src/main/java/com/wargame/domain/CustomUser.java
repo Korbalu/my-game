@@ -35,6 +35,8 @@ public class CustomUser implements UserDetails {
     private List<Army> armies;
     @OneToMany(mappedBy = "owner")
     private List<Town> towns;
+    @OneToMany(mappedBy = "owner")
+    private List<Log> logs;
     @Column
     private String token;
 

@@ -16,6 +16,7 @@ import {UnitListModel} from "../models/unit-list-model";
 import {BuildingsModel} from "../models/buildings-model";
 import {TownDetailsModel} from "../models/town-details-model";
 import {TownListModel} from "../models/town-list-model";
+import {LogListModel} from "../models/log-list-model";
 
 const BASE_URL: string = "http://localhost:8080";
 
@@ -156,5 +157,11 @@ export class UserService {
     this.token = localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.post(BASE_URL + "/api/army/battle", enemy, {headers})
+  }
+  logLister():Observable<any>{
+    // @ts-ignore
+    this.token = localStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.get<Array<LogListModel>>(BASE_URL + "/api/log", {headers})
   }
 }

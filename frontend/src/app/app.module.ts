@@ -12,6 +12,7 @@ import { CreateTownComponent } from './components/create-town/create-town.compon
 import { TrainComponent } from './components/train/train.component';
 import { BuildComponent } from './components/build/build.component';
 import { ListOfTownsComponent } from './components/list-of-towns/list-of-towns.component';
+import { LogsComponent } from './components/logs/logs.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ListOfTownsComponent } from './components/list-of-towns/list-of-towns.c
     CreateTownComponent,
     TrainComponent,
     BuildComponent,
-    ListOfTownsComponent
+    ListOfTownsComponent,
+    LogsComponent
   ],
     imports: [
         BrowserModule,

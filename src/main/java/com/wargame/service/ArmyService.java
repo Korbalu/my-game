@@ -7,6 +7,7 @@ import com.wargame.dto.incoming.ArmyUpdateDTO;
 import com.wargame.dto.outgoing.UnitListDTO;
 import com.wargame.repository.ArmyRepository;
 import com.wargame.repository.CustomUserRepository;
+import com.wargame.repository.LogRepository;
 import com.wargame.repository.TownRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +24,14 @@ import java.util.stream.Collectors;
 public class ArmyService {
     private ArmyRepository armyRepository;
     private CustomUserRepository customUserRepository;
-
     private TownRepository townRepository;
+    private LogRepository logRepository;
 
-    public ArmyService(ArmyRepository armyRepository, CustomUserRepository customUserRepository, TownRepository townRepository) {
+    public ArmyService(ArmyRepository armyRepository, CustomUserRepository customUserRepository, TownRepository townRepository, LogRepository logRepository) {
         this.townRepository = townRepository;
         this.armyRepository = armyRepository;
         this.customUserRepository = customUserRepository;
+        this.logRepository = logRepository;
     }
 
     public void saveArmy(ArmyCreationDTO creationDTO) {
@@ -141,17 +142,27 @@ public class ArmyService {
             int multiplier = Math.toIntExact(enemy.getTowns().get(0).getBuildings().get(Buildings.Wall));
             sumDefense *= 1 + (double) multiplier / 50;
         }
-
+            Long dataForLogArmy = 0L;
         if (sumAttack > sumDefense) {
             System.out.println("Attacker won!");
             for (Army army1 : army) {
+                Long dataForLogArmya = army1.getQuantity();
                 army1.setQuantity(Math.round(army1.getQuantity() * 0.9));
+                Long dataForLogArmyb = army1.getQuantity();
+                dataForLogArmy += dataForLogArmya-dataForLogArmyb;
             }
             for (Army army1 : otherArmy) {
                 army1.setQuantity(Math.round(army1.getQuantity() * 0.85));
             }
             owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault() + Math.round(enemy.getTowns().get(0).getVault() * 0.15));
+
+            double dataForLogVault = Math.round(enemy.getTowns().get(0).getVault() * 0.15);
+
             enemy.getTowns().get(0).setVault(Math.round(enemy.getTowns().get(0).getVault() * 0.85));
+
+            Log log = new Log("Battle", "Battle Won, gold acquired: " + dataForLogVault + ", units lost: " + dataForLogArmy);
+            log.setOwner(owner);
+            logRepository.save(log);
         } else {
             System.out.println("Defender won!");
             for (Army army1 : army) {
