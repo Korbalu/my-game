@@ -9,7 +9,7 @@
     <tr class="table-bordered" *ngFor="let log of logs">
       <td>{{log.headers}}</td>
       <td>{{log.log}}</td>
-      <td>{{log.createdAt}}</td>
+      <td>{{log.createdAt | date: 'yyyy-MM-dd HH:mm'}}</td>
     </tr>
     </tbody>
   </table>

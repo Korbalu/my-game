@@ -1,20 +1,16 @@
 package com.wargame.service;
 
 import com.wargame.domain.*;
-import com.wargame.dto.incoming.ArmyCreationDTO;
-import com.wargame.dto.incoming.BuildingCreationDTO;
 import com.wargame.dto.incoming.TownCreationDTO;
 import com.wargame.dto.outgoing.*;
 import com.wargame.repository.CustomUserRepository;
 import com.wargame.repository.TownRepository;
-import io.micrometer.observation.ObservationTextPublisher;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.lang.model.type.UnionType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +46,7 @@ public class TownService {
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findByMail(loggedInUser.getUsername()).orElse(null);
         town.setOwner(owner);
+
 
         townRepository.save(town);
     }
@@ -97,7 +94,7 @@ public class TownService {
         Town town = townRepository.findByOwnerId(owner.getId());
         town.getBuildings().computeIfPresent(Buildings.valueOf(building), (k, v) -> v + 1);
         town.getBuildings().putIfAbsent(Buildings.valueOf(building), 1L);
-        owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault() - Buildings.valueOf(building).getCost());
+        town.setVault(town.getVault() - Buildings.valueOf(building).getCost());
     }
 
     public TownIdDTO townIdentifier() {
@@ -134,7 +131,7 @@ public class TownService {
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
 
         Town town = townRepository.findByOwnerId(owner.getId());
-        return new TownDetailsDTO(town.getVault(), town.getName(), town.getRace().getDisplayName());
+        return new TownDetailsDTO(town.getVault(), town.getName(), town.getRace().getDisplayName(), town.getOwner().getTurns());
     }
 
     public void newTurn() {
@@ -145,19 +142,22 @@ public class TownService {
         System.out.println(owner.getId());
         System.out.println(owner);
 
-        for (Map.Entry<Buildings, Long> building : town.getBuildings().entrySet()) {
-            if (building.getKey().equals(Buildings.Mine)) {
-                town.setVault(town.getVault() + building.getValue() * Buildings.Mine.getProduction());
-            }
-            if (building.getKey().equals(Buildings.Barracks)) {
-                for (int i = 0; i < building.getValue(); i++) {
-                    armyService.increaseUnit(Units.Swordsman1.getDisplayName());
-                    town.setVault(town.getVault() + Units.Swordsman1.getCost());
+        if (owner.getTurns()>0) {
+            for (Map.Entry<Buildings, Long> building : town.getBuildings().entrySet()) {
+                if (building.getKey().equals(Buildings.Mine)) {
+                    town.setVault(town.getVault() + building.getValue() * Buildings.Mine.getProduction());
                 }
+                if (building.getKey().equals(Buildings.Barracks)) {
+                    for (int i = 0; i < building.getValue(); i++) {
+                        armyService.increaseUnit(Units.Swordsman1.getDisplayName());
+                        town.setVault(town.getVault() + Units.Swordsman1.getCost());
+                    }
+                }
+                System.out.println(building.getKey());
+                System.out.println(building.getValue());
             }
-            System.out.println(building.getKey());
-            System.out.println(building.getValue());
         }
+        owner.setTurns(owner.getTurns()-1);
     }
 
     public List<TownListDTO> townLister() {

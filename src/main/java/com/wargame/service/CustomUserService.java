@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AuthenticationService {
+public class CustomUserService {
 
     private CustomUserRepository customUserRepository;
     private PasswordEncoder passwordEncoder;
     private JWTProcessor processor;
     private AuthenticationManager authenticationManager;
 
-    public AuthenticationService(CustomUserRepository customUserRepository,
-                                 PasswordEncoder passwordEncoder,
-                                 JWTProcessor processor,
-                                 AuthenticationManager authenticationManager) {
+    public CustomUserService(CustomUserRepository customUserRepository,
+                             PasswordEncoder passwordEncoder,
+                             JWTProcessor processor,
+                             AuthenticationManager authenticationManager) {
         this.customUserRepository = customUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.processor = processor;
@@ -44,6 +44,7 @@ public class AuthenticationService {
         cUser.setPassword(passwordEncoder.encode(request.getPassword()));
         cUser.setRole(UserRole.USER);
         cUser.setCreatedAt(LocalDateTime.now());
+        cUser.setTurns(20);
         if (customUserRepository.findAllByEmail(cUser.getEmail()).orElse(null) == null){
             customUserRepository.save(cUser);
             String jwt = processor.generateToken(cUser);
@@ -73,9 +74,5 @@ public class AuthenticationService {
                     dto.setRaceName(race.getDisplayName());
                     return dto;})
                 .collect(Collectors.toList());
-
-//        return Arrays.stream(Race.values())
-//                .map(race -> new RaceListDTO())
-//                .collect(Collectors.toList());
     }
 }

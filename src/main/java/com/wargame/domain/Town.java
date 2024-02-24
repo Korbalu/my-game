@@ -28,13 +28,17 @@ public class Town {
     @Enumerated(EnumType.STRING)
     @Column(name = "raceType")
     private Race race;
-    @ManyToOne
+    @Column
+    private Long score;
+    @OneToOne
+    @JoinColumn(name = "owner_id")
     private CustomUser owner;
 
     public Town(TownCreationDTO TCDTO) {
         this.name = TCDTO.getName();
         this.vault = 2000L;
         this.buildings = new HashMap<>();
+        this.score = 0L;
     }
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
-export interface TownDetailsModel{
+export interface TownDetailsModel {
   vault: number;
   townName: string;
   race: string;
+  turns: number;
 }

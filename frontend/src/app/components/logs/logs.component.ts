@@ -8,6 +8,7 @@ import {UserService} from "../../services/user.service";
   styleUrls: ['./logs.component.css']
 })
 export class LogsComponent {
+
   logs: Array<LogListModel> = [];
 
   constructor(private userService: UserService) {

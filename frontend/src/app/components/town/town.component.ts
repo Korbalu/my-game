@@ -19,6 +19,7 @@ export class TownComponent implements OnInit {
   townName: string = '';
   vault: number = 0;
   townRace: string = '';
+  turns:number = 0;
 
   constructor(private userService: UserService) {
 
@@ -31,6 +32,7 @@ export class TownComponent implements OnInit {
         this.vault = data.vault;
         this.townRace = data.race;
         this.townName = data.townName;
+        this.turns = data.turns;
       },
       error: (err)=>{
         console.log(err)

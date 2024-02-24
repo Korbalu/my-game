@@ -11,4 +11,5 @@ public class TownDetailsDTO {
     private Long vault;
     private String townName;
     private String race;
+    private Integer turns;
 }

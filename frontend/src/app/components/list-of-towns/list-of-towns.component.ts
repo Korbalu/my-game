@@ -9,6 +9,7 @@ import {TownListModel} from "../../models/town-list-model";
   styleUrls: ['./list-of-towns.component.css']
 })
 export class ListOfTownsComponent {
+
   townList: Array<TownListModel> = [];
 
   constructor(private userService: UserService) {

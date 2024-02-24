@@ -31,10 +31,10 @@ public class CustomUser implements UserDetails {
     private UserRole role;
     @Column
     private LocalDateTime createdAt;
+    @Column
+    private Integer turns;
     @OneToMany(mappedBy = "owner")
     private List<Army> armies;
-    @OneToMany(mappedBy = "owner")
-    private List<Town> towns;
     @OneToMany(mappedBy = "owner")
     private List<Log> logs;
     @Column

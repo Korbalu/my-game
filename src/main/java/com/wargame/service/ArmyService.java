@@ -62,16 +62,18 @@ public class ArmyService {
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
 
+        Town town = townRepository.findByOwnerId(owner.getId());
+
         Army army = armyRepository.findByOwnerAndType(owner.getId(), Units.valueOf(unit));
 
         if (army == null) {
-            ArmyCreationDTO armyCreationDTO = new ArmyCreationDTO(Units.valueOf(unit), 1L, owner.getTowns().get(0).getRace());
+            ArmyCreationDTO armyCreationDTO = new ArmyCreationDTO(Units.valueOf(unit), 1L, town.getRace());
             Army army2 = new Army(armyCreationDTO);
             army2.setOwner(owner);
-            owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault() - Units.valueOf(unit).getCost());
+            town.setVault(town.getVault() - Units.valueOf(unit).getCost());
             armyRepository.save(army2);
         } else {
-            owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault() - Units.valueOf(unit).getCost());
+            town.setVault(town.getVault() - Units.valueOf(unit).getCost());
             army.setQuantity(army.getQuantity() + 1);
         }
     }
@@ -107,10 +109,13 @@ public class ArmyService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
         CustomUser owner = customUserRepository.findAllByEmail(loggedInUser.getUsername()).orElse(null);
+        Town town = townRepository.findByOwnerId(owner.getId());
 
         CustomUser enemy = customUserRepository.findByName(name).orElse(null);
+        Town enemyTown = townRepository.findByOwnerId(enemy.getId());
 
         List<Army> army = armyRepository.findAllById(owner.getId());
+
         List<Army> otherArmy = armyRepository.findAllById(enemy.getId());
 
         double sumAttack = 0;
@@ -138,8 +143,8 @@ public class ArmyService {
                 sumAttack += army1.getQuantity() * army1.getType().getDefense() * 1.05;
             }
         }
-        if (enemy.getTowns().get(0).getBuildings().containsKey(Buildings.Wall)) {
-            int multiplier = Math.toIntExact(enemy.getTowns().get(0).getBuildings().get(Buildings.Wall));
+        if (enemyTown.getBuildings().containsKey(Buildings.Wall)) {
+            int multiplier = Math.toIntExact(enemyTown.getBuildings().get(Buildings.Wall));
             sumDefense *= 1 + (double) multiplier / 50;
         }
             Long dataForLogArmy = 0L;
@@ -154,11 +159,11 @@ public class ArmyService {
             for (Army army1 : otherArmy) {
                 army1.setQuantity(Math.round(army1.getQuantity() * 0.85));
             }
-            owner.getTowns().get(0).setVault(owner.getTowns().get(0).getVault() + Math.round(enemy.getTowns().get(0).getVault() * 0.15));
+            town.setVault(town.getVault() + Math.round(enemyTown.getVault() * 0.15));
 
-            double dataForLogVault = Math.round(enemy.getTowns().get(0).getVault() * 0.15);
+            double dataForLogVault = Math.round(enemyTown.getVault() * 0.15);
 
-            enemy.getTowns().get(0).setVault(Math.round(enemy.getTowns().get(0).getVault() * 0.85));
+            enemyTown.setVault(Math.round(enemyTown.getVault() * 0.85));
 
             Log log = new Log("Battle", "Battle Won, gold acquired: " + dataForLogVault + ", units lost: " + dataForLogArmy);
             log.setOwner(owner);
